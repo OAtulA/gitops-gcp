@@ -1,4 +1,11 @@
 # Vim session file
 Session.vim
 
+# Environment vars 
+
+.env*
+!.env.demo 
+# Sensitive json files
+
+*.json
 
