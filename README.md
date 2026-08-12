@@ -229,3 +229,9 @@ helm repo add crossplane-stable https://charts.crossplane.io/stable
 helm repo update
 helm search repo crossplane-stable/crossplane --versions | head -10
 ```
+
+- Apply the application file
+
+```sh
+kubectl apply -f argocd/application.yaml
+```
