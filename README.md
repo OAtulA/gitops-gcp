@@ -233,5 +233,6 @@ helm search repo crossplane-stable/crossplane --versions | head -10
 - Apply the application file
 
 ```sh
-kubectl apply -f argocd/application.yaml
+$ kubectl apply -f argocd/application.yaml
+application.argoproj.io/crossplane-bootstrap created
 ```
