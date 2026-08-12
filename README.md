@@ -221,3 +221,11 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 ```sh
 kubectl rollout restart statefulset argocd-application-controller -n argocd
 ```
+
+- Check the crossplane stable version
+
+```sh
+helm repo add crossplane-stable https://charts.crossplane.io/stable
+helm repo update
+helm search repo crossplane-stable/crossplane --versions | head -10
+```

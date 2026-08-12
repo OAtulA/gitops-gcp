@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://charts.crossplane.io/stable
     chart: crossplane
-    targetRevision: 2.3.0
+    targetRevision: 2.3.4
 
   destination:
     server: https://kubernetes.default.svc
@@ -19,6 +19,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
-
     syncOptions:
       - CreateNamespace=true

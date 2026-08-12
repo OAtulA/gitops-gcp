@@ -5,18 +5,19 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source: 
-    repoURL: # my infra repo
+
+  source:
+    repoURL: https://github.com/OAtulA/gitops-gcp.git
     targetRevision: main
     path: bootstrap
+
   destination:
     server: https://kubernetes.default.svc
     namespace: crossplane-system
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
----
-    
