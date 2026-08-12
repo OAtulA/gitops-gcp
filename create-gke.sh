@@ -5,7 +5,7 @@ echo "starting to create the gke cluster"
 # https://docs.cloud.google.com/compute/docs/regions-zones
 gcloud container clusters create gitops-gcp \
   --zone=asia-south2-a \
-  --machine-type e2-medium \
+  --machine-type e2-standard-4 \
   --num-nodes 1 \
   --workload-pool="${PROJECT_ID}.svc.id.goog" \
   --project="$PROJECT_ID"
