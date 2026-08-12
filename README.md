@@ -21,6 +21,8 @@ NAME                  INSTALLED   HEALTHY   PACKAGE                             
 provider-family-gcp   False       False     xpkg.upbound.io/upbound/provider-family-gcp:v2.5.1   91s
 ```
 
+## Cloud setup
+
 - Authenticate with gcloud
 
 `gcloud auth login`
@@ -136,6 +138,8 @@ error: current-context is not set
 
 - creating GKE
 
+`./create-gke.sh`
+
 ```sh
 $ ./create-gke.sh 
 starting to create the gke cluster
@@ -149,7 +153,7 @@ gitops-gcp  asia-south2-a  1.35.6-gke.1250000  34.126.214.89  e2-medium     1.35
 
 ```
 
-- Check the nodes and pods there
+__Check the nodes and pods there__
 
 ```sh
 $ kubectl get nodes
@@ -175,4 +179,45 @@ kube-system       netd-dcq6g                                             3/3    
 kube-system       node-local-dns-xn24l                                   2/2     Running   0          14m
 kube-system       pdcsi-node-qjcbh                                       3/3     Running   0          14m
 
+```
+
+- Installing ArgoCD
+
+For details see [./Argocd-setup.md]()
+
+`./install-argocd.sh`
+
+I did the port forwarding using
+
+`kubectl port-forward svc/argocd-server -n argocd 8080:443`
+
+Next I got the password with
+
+```sh
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d
+```
+
+- enable the logs
+
+  ```sh
+  gcpdiag runbook gke/logs \
+    --parameter project_id=PROJECT_ID \
+    --parameter name=CLUSTER_NAME \
+    --parameter location=LOCATION
+  ```
+
+- enable the cloud resource manager api
+ `gcloud services enable cloudresourcemanager.googleapis.com`
+
+- Add the argocd to the gke
+
+ ```sh
+ kubectl apply -f argocd/argocd-cm.yaml
+ ```
+
+- Restart the controller
+
+```sh
+kubectl rollout restart statefulset argocd-application-controller -n argocd
 ```
