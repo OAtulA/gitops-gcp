@@ -198,6 +198,9 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
 ```
 
+- enable the cloud resource manager api
+ `gcloud services enable cloudresourcemanager.googleapis.com`
+
 - enable the logs
 
   ```sh
@@ -207,8 +210,40 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
     --parameter location=LOCATION
   ```
 
-- enable the cloud resource manager api
- `gcloud services enable cloudresourcemanager.googleapis.com`
+- Now we give permissions for compute, storage and cloudsql
+
+```sh
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --member="serviceAccount:crossplane@<PROJECT_ID>.iam.gserviceaccount.com" \
+  --role="roles/compute.admin"
+```
+
+```sh
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --member="serviceAccount:crossplane@<PROJECT_ID>.iam.gserviceaccount.com" \
+  --role="roles/storage.admin"
+```
+
+```sh
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --member="serviceAccount:crossplane@<PROJECT_ID>.iam.gserviceaccount.com" \
+  --role="roles/cloudsql.admin"
+```
+
+- Bind k8 SA to gcp SA
+
+```sh
+  crossplane@<PROJECT_ID>.iam.gserviceaccount.com \
+  gcloud iam service-accounts add-iam-policy-binding \
+  --role="roles/iam.workloadIdentityUser" \
+  --member="serviceAccount:${PROJECT_ID}.svc.id.goog[crossplane-system/crossplane]"
+```
+
+- Create Argo CD connection to my repo
+
+```sh
+kubectl apply -f argocd/crossplane-provider.yaml
+```
 
 - Add the argocd to the gke
 
